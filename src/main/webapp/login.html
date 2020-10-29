@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>黑马旅游网-登录</title>  
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+      <!--导入angularJS文件-->
+    <script src="js/angular.min.js"></script>
+	<!--导入jquery-->
+	<script src="js/jquery-3.3.1.js"></script>
+
+	<script>
+		//入口函数
+		$(function () {
+			//绑定按钮事件
+			$("#ben").click(function () {
+					//使用ajax异步几时提交表单信息
+					$.post("/travel/user/login",$("#loginForm").serialize(),function (obj) {
+					if (obj.errorMsg == null){
+							if (confirm("点击确认进入！！")) {
+								//登录成功，跳转页面
+								window.location.href= "http://localhost:80/travel/index.html";
+							}
+						}else {
+						//登录失败，在提示栏提示用户错误信息
+						$("#errorMsg").html(obj.errorMsg);
+					}
+					},"json");
+			});
+
+			//给输入框绑定失去焦点事件
+			$("#username").blur(checkName);
+			$("#password").blur(checkPass);
+		});
+		//校验账号输入框
+		function checkName(){
+			//获取输入框的值
+			var val = $("#username");
+			/*//进行非空处理
+			if (val.val() == null){	return false;}*/
+			//定义正则表达式
+			var ze = /^\w{6,12}$/;
+			//获取像是错误信息的提示框
+			var msg = $("#errorMsg");
+			//调用正则校验方法
+			var b = ze.test(val.val());
+			//进行逻辑判断处理
+			if (b){
+				//为true把输入款变成绿色,把提示信息回复
+				val.css("border","1px solid green");
+				msg.html("");
+			}else {
+				//为false把输入框变成红色，并且在提示框输出提示信息
+				val.css("border","1px solid red");
+				msg.html("你输入格式不正确，请输入6~12字母或数字的账号!");
+			}
+			return b;
+		}
+
+		//校验密码输入框
+		function checkPass(){
+			//获取输入框的值
+			var val = $("#password");
+			//定义正则表达式
+			var ze = /^\w{6,12}$/;
+			//获取像是错误信息的提示框
+			var msg = $("#errorMsg");
+			//调用正则校验方法
+			var e = ze.test(val.val());
+			//进行逻辑判断处理
+			if (e){
+				//为true把输入款变成绿色，把提示信息回复
+				val.css("border","1px solid green");
+				msg.html("");
+			}else {
+				//为false把输入框变成红色，并且在提示框输出提示信息
+				val.css("border","1px solid red");
+				msg.html("你输入格式不正确，请输入6~12字母或数字的密码!");
+			}
+			return e;
+
+		}
+	</script>
+</head>
+<body>
+<!--引入头部-->
+<div id="header"></div>
+    <!-- 头部 end -->
+    <section id="login_wrap">
+        <div class="fullscreen-bg" style="background: url(images/login_bg.png);height: 532px;">
+        	
+        </div>
+        <div class="login-box">
+        	<div class="title">
+        		<img src="images/login_logo.png" alt="">
+        		<span>欢迎登录黑马旅游账户</span>
+        	</div>
+        	<div class="login_inner">
+				
+				<!--登录错误提示消息-->
+        		<div id="errorMsg" class="alert alert-danger" ></div>
+				<!--表单头-->
+				<form id="loginForm" action="#" method="post" accept-charset="utf-8">
+        			<input type="hidden" name="action" value="login"/>
+					<input name="username" id="username" type="text" placeholder="请输入账号" autocomplete="off">
+        			<input name="password" id="password" type="text" placeholder="请输入密码" autocomplete="off">
+        			<div class="verify">
+					<input name="check" type="text" placeholder="请输入验证码" autocomplete="off">
+					<span><img src="http://localhost:80/travel/checkCode" alt="" onclick="changeCheckCode(this)"></span>
+					<script type="text/javascript">
+						//图片点击事件
+						function changeCheckCode(img) {
+							img.src="http://localhost:80/travel/checkCode?"+new Date().getTime();
+						}
+					</script>
+			</div>
+			<div class="submit_btn">
+        				<button type="button" id="ben">登录</button>
+        				<div class="auto_login">
+        					<input type="checkbox" name="" class="checkbox">
+        					<span>自动登录</span>
+        				</div>        				
+        			</div>        			       		
+        		</form>
+        		<div class="reg">没有账户？<a href="javascript:;">立即注册</a></div>
+        	</div>
+        </div>
+    </section>
+    <!--引入尾部-->
+    <div id="footer"></div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <!--导入布局js，共享header和footer-->
+    <script type="text/javascript" src="js/include.js"></script>
+</body>
+
+</html>
